@@ -3,7 +3,7 @@
 
 namespace Icinga\Module\Monitoring\Command\Renderer;
 
-use Icinga\Module\Monitoring\Command\IcingaApiCommand;
+use Icinga\Module\Monitoring\Command\IcingaApiCommandList;
 use Icinga\Module\Monitoring\Command\Instance\ToggleInstanceFeatureCommand;
 use Icinga\Module\Monitoring\Command\Object\AcknowledgeProblemCommand;
 use Icinga\Module\Monitoring\Command\Object\AddCommentCommand;
@@ -79,7 +79,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
      *
      * @param   IcingaCommand   $command
      *
-     * @return  IcingaApiCommand
+     * @return  IcingaApiCommandList
      */
     public function render(IcingaCommand $command)
     {
@@ -98,7 +98,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'comment'   => $command->getComment()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderSendCustomNotification(SendCustomNotificationCommand $command)
@@ -110,7 +110,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'force'     => $command->getForced()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderProcessCheckResult(ProcessCheckResultCommand $command)
@@ -122,7 +122,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'performance_data'  => $command->getPerformanceData()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderScheduleCheck(ScheduleServiceCheckCommand $command)
@@ -133,7 +133,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'force_check'   => $command->getForced()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderScheduleDowntime(ScheduleServiceDowntimeCommand $command)
@@ -149,7 +149,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'trigger_name'  => $command->getTriggerId()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderAcknowledgeProblem(AcknowledgeProblemCommand $command)
@@ -163,7 +163,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             'notify'        => $command->getNotify()
         );
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderToggleObjectFeature(ToggleObjectFeatureCommand $command)
@@ -207,7 +207,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
             )
         );
         $this->applyFilter($data, $object);
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderDeleteComment(DeleteCommentCommand $command)
@@ -216,7 +216,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
         $data = array(
             'comment' => $command->getCommentName()
         );
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderDeleteDowntime(DeleteDowntimeCommand $command)
@@ -225,7 +225,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
         $data = array(
             'downtime' => $command->getDowntimeName()
         );
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderRemoveAcknowledgement(RemoveAcknowledgementCommand $command)
@@ -233,7 +233,7 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
         $endpoint = 'actions/remove-acknowledgement';
         $data = array();
         $this->applyFilter($data, $command->getObject());
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 
     public function renderToggleInstanceFeature(ToggleInstanceFeatureCommand $command)
@@ -271,6 +271,6 @@ class IcingaApiCommandRenderer implements IcingaCommandRendererInterface
                 $attr => $enabled
             )
         );
-        return IcingaApiCommand::create($endpoint, $data);
+        return IcingaApiCommandList::create($endpoint, $data);
     }
 }

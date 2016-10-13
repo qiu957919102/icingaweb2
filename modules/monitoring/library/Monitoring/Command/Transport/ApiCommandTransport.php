@@ -194,34 +194,36 @@ class ApiCommandTransport implements CommandTransportInterface
      */
     public function send(IcingaCommand $command, $now = null)
     {
-        $command = $this->renderer->render($command);
-        Logger::debug(
-            'Sending Icinga command "%s" to the API "%s:%u"',
-            $command->getEndpoint(),
-            $this->getHost(),
-            $this->getPort()
-        );
-        $response = RestRequest::post($this->getUriFor($command->getEndpoint()))
-            ->authenticateWith($this->getUsername(), $this->getPassword())
-            ->sendJson()
-            ->noStrictSsl()
-            ->setPayload($command->getData())
-            ->send();
-        if (isset($response['error'])) {
-            throw new CommandTransportException(
-                'Can\'t send external Icinga command: %u %s',
-                $response['error'],
-                $response['status']
+        foreach ($this->renderer->render($command) as $command) {
+            /** @var \Icinga\Module\Monitoring\Command\IcingaApiCommand $command */
+            Logger::debug(
+                'Sending Icinga command "%s" to the API "%s:%u"',
+                $command->getEndpoint(),
+                $this->getHost(),
+                $this->getPort()
             );
-        }
-        $result = array_pop($response['results']);
+            $response = RestRequest::post($this->getUriFor($command->getEndpoint()))
+                ->authenticateWith($this->getUsername(), $this->getPassword())
+                ->sendJson()
+                ->noStrictSsl()
+                ->setPayload($command->getData())
+                ->send();
+            if (isset($response['error'])) {
+                throw new CommandTransportException(
+                    'Can\'t send external Icinga command: %u %s',
+                    $response['error'],
+                    $response['status']
+                );
+            }
+            $result = array_pop($response['results']);
 
-        if ($result['code'] < 200 || $result['code'] >= 300) {
-            throw new CommandTransportException(
-                'Can\'t send external Icinga command: %u %s',
-                $result['code'],
-                $result['status']
-            );
+            if ($result['code'] < 200 || $result['code'] >= 300) {
+                throw new CommandTransportException(
+                    'Can\'t send external Icinga command: %u %s',
+                    $result['code'],
+                    $result['status']
+                );
+            }
         }
     }
 }
