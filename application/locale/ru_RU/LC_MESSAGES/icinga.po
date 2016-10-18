@@ -519,7 +519,7 @@ msgid ""
 msgstr ""
 
 #: /vagrant/application/views/scripts/dashboard/error.phtml:2
-msgid "Could not persist dashboard"
+msgid "Could not save dashboard"
 msgstr ""
 
 #: /vagrant/application/forms/Config/User/CreateMembershipForm.php:89

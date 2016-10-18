@@ -542,7 +542,7 @@ msgstr ""
 "legen Sie als Erstes eine Ressource für die Authentifizierung an."
 
 #: /vagrant/application/views/scripts/dashboard/error.phtml:2
-msgid "Could not persist dashboard"
+msgid "Could not save dashboard"
 msgstr "Konnte Dashboard nicht speichern"
 
 #: /vagrant/application/forms/Config/User/CreateMembershipForm.php:89

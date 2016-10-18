@@ -539,7 +539,7 @@ msgstr ""
 "Configurare prima una risorsa per l'autenticazione."
 
 #: /usr/share/icingaweb2/application/views/scripts/dashboard/error.phtml:2
-msgid "Could not persist dashboard"
+msgid "Could not save dashboard"
 msgstr "Dashboard non persistente"
 
 #: /usr/share/icingaweb2/application/forms/Config/User/CreateMembershipForm.php:89
