@@ -40,17 +40,14 @@ class Announce
     /**
      * Announce constructor
      *
-     * @param   string      $author
-     * @param   string      $message
-     * @param   DateTime    $start
-     * @param   DateTime    $end
+     * @param array $properties
      */
-    public function __construct($author, $message, $start, $end)
+    public function __construct(array $properties = array())
     {
-        $this->author = $author;
-        $this->message = $message;
-        $this->start = clone $start;
-        $this->end = clone $end;
+        foreach ($properties as $k => $v) {
+            $method = 'set' . ucfirst($k);
+            $this->$method($v);
+        }
     }
 
     /**
