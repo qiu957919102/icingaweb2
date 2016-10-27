@@ -23,7 +23,7 @@ class AnnounceIniRepository extends IniRepository
         }
         $config = $ds->getConfigObject();
         if ($config->getKeyColumn() === null) {
-            $config->setKeyColumn('hash');
+            $config->setKeyColumn('id');
         }
         parent::__construct($ds);
     }
@@ -31,7 +31,7 @@ class AnnounceIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    protected $queryColumns = array('announce' => array('hash', 'author', 'message', 'start', 'end'));
+    protected $queryColumns = array('announce' => array('id', 'author', 'message', 'hash', 'start', 'end'));
 
     /**
      * {@inheritDoc}
@@ -70,6 +70,9 @@ class AnnounceIniRepository extends IniRepository
      */
     public function insert($target, array $data)
     {
+        if (! isset($data['id'])) {
+            $data['id'] = uniqid('', true);
+        }
         if (! isset($data['hash'])) {
             $announce = new Announce($data);
             $data['hash'] = $announce->getHash();
@@ -82,18 +85,22 @@ class AnnounceIniRepository extends IniRepository
      */
     public function update($target, array $data, Filter $filter = null)
     {
-        $query = $this->select(array('hash', 'author', 'message', 'start', 'end'));
-        if ($filter !== null) {
-            $query->applyFilter($filter);
-        }
-        foreach ($query->fetchAll() as $row) {
-            $row = (array) $row;
-            $hash = $row['hash'];
-            unset($row['hash']);
-            $announce = new Announce(array_merge($row, $data));
-            $data['hash'] = $announce->getHash();
-            parent::update($target, $data, Filter::expression('hash', '=', $hash));
-            unset($data['hash']);
+        if (isset($data['message'])) {
+            $query = $this->select(array('id', 'author', 'message', 'start', 'end'));
+            if ($filter !== null) {
+                $query->applyFilter($filter);
+            }
+            foreach ($query->fetchAll() as $row) {
+                $row = (array) $row;
+                $id = $row['id'];
+                unset($row['id']);
+                $announce = new Announce(array_merge($row, $data));
+                $data['hash'] = $announce->getHash();
+                parent::update($target, $data, Filter::where('id', $id));
+                unset($data['hash']);
+            }
+        } else {
+            parent::update($target, $data, $filter);
         }
     }
 }
