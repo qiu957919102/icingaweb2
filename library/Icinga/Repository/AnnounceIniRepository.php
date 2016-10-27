@@ -42,6 +42,11 @@ class AnnounceIniRepository extends IniRepository
     ));
 
     /**
+     * {@inheritDoc}
+     */
+    protected $triggers = array('announce');
+
+    /**
      * Create a DateTime from a *nix timestamp
      *
      * @param   string  $timestamp
@@ -66,41 +71,43 @@ class AnnounceIniRepository extends IniRepository
     }
 
     /**
-     * {@inheritDoc}
+     * Before-insert trigger (per row)
+     *
+     * @param   object  $new    The original data to insert
+     *
+     * @return  object          The eventually modified data to insert
      */
-    public function insert($target, array $data)
+    protected function onInsertAnnounce($new)
     {
-        if (! isset($data['id'])) {
-            $data['id'] = uniqid('', true);
+        if (! isset($new->id)) {
+            $new->id = uniqid('', true);
         }
-        if (! isset($data['hash'])) {
-            $announce = new Announce($data);
-            $data['hash'] = $announce->getHash();
+        if (! isset($new->hash)) {
+            $announce = new Announce($new);
+            $new->hash = $announce->getHash();
         }
-        parent::insert($target, $data);
+
+        return $new;
     }
 
     /**
-     * {@inheritDoc}
+     * Before-update trigger (per row)
+     *
+     * @param   object  $old    The original data as currently stored
+     * @param   object  $new    The original data to update
+     *
+     * @return  object          The eventually modified data to update
      */
-    public function update($target, array $data, Filter $filter = null)
+    protected function onUpdateAnnounce($old, $new)
     {
-        if (isset($data['message'])) {
-            $query = $this->select(array('id', 'author', 'message', 'start', 'end'));
-            if ($filter !== null) {
-                $query->applyFilter($filter);
-            }
-            foreach ($query->fetchAll() as $row) {
-                $row = (array) $row;
-                $id = $row['id'];
-                unset($row['id']);
-                $announce = new Announce(array_merge($row, $data));
-                $data['hash'] = $announce->getHash();
-                parent::update($target, $data, Filter::where('id', $id));
-                unset($data['hash']);
-            }
-        } else {
-            parent::update($target, $data, $filter);
+        if ($new->message !== $old->message) {
+            $options = (array) $new;
+            unset($options['id']);
+            unset($options['hash']);
+            $announce = new Announce($options);
+            $new->hash = $announce->getHash();
         }
+
+        return $new;
     }
 }
