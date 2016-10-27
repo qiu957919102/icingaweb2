@@ -31,7 +31,7 @@ class Announce
     protected $end;
 
     /**
-     * Hash of this Announce computed from its members
+     * Hash of the message
      *
      * @var string|null
      */
@@ -70,7 +70,6 @@ class Announce
     public function setAuthor($author)
     {
         $this->author = $author;
-        $this->hash = null;
         return $this;
     }
 
@@ -118,7 +117,6 @@ class Announce
     public function setStart($start)
     {
         $this->start = clone $start;
-        $this->hash = null;
         return $this;
     }
 
@@ -142,7 +140,6 @@ class Announce
     public function setEnd($end)
     {
         $this->end = clone $end;
-        $this->hash = null;
         return $this;
     }
 
@@ -154,12 +151,7 @@ class Announce
     public function getHash()
     {
         if ($this->hash === null) {
-            $this->hash = md5(serialize(array(
-                $this->author,
-                $this->message,
-                $this->start->getTimestamp(),
-                $this->end->getTimestamp()
-            )));
+            $this->hash = md5($this->message);
         }
         return $this->hash;
     }
