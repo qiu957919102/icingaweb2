@@ -17,7 +17,7 @@ class AnnounceRepositoryForm extends RepositoryForm
     protected function createInsertElements(array $formData)
     {
         $this->addElement(
-            'hidden',
+            'text',
             'author',
             array(
                 'required'  => true,
