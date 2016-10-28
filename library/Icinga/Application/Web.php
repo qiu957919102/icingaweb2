@@ -305,6 +305,12 @@ class Web extends EmbeddedWeb
                             'label'     => t('About'),
                             'url'       => 'about',
                             'priority'  => 701
+                        ),
+                        'announces' => array(
+                            'label'      => t('Announces'),
+                            'url'        => 'announces',
+                            'permission' => 'admin/announces',
+                            'priority'   => 711
                         )
                     )
                 ),
