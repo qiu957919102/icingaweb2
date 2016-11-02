@@ -8,7 +8,7 @@ require_once __DIR__ . '/EmbeddedWeb.php';
 use DateTime;
 use Icinga\Data\Filter\Filter;
 use Icinga\Data\Filter\FilterAnd;
-use Icinga\Repository\AnnounceIniRepository;
+use Icinga\Repository\AnnouncementIniRepository;
 use Zend_Controller_Action_HelperBroker;
 use Zend_Controller_Front;
 use Zend_Controller_Router_Route;
@@ -101,7 +101,7 @@ class Web extends EmbeddedWeb
             ->setupTimezone()
             ->setupLogger()
             ->setupInternationalization()
-            ->showAnnounces();
+            ->showAnnouncements();
     }
 
     /**
@@ -311,10 +311,10 @@ class Web extends EmbeddedWeb
                             'url'       => 'about',
                             'priority'  => 701
                         ),
-                        'announces' => array(
-                            'label'      => t('Announces'),
-                            'url'        => 'announces',
-                            'permission' => 'admin/announces',
+                        'announcements' => array(
+                            'label'      => t('Announcements'),
+                            'url'        => 'announcements',
+                            'permission' => 'admin/announcements',
                             'priority'   => 711
                         )
                     )
@@ -564,14 +564,14 @@ class Web extends EmbeddedWeb
     }
 
     /**
-     * Show the user all announces as notifications
+     * Show the user all announcements as notifications
      *
      * @return $this
      */
-    protected function showAnnounces()
+    protected function showAnnouncements()
     {
         if (! Icinga::app()->getRequest()->isXmlHttpRequest()) {
-            $repo = new AnnounceIniRepository();
+            $repo = new AnnouncementIniRepository();
             $now = new DateTime();
             $query = $repo
                 ->select(array('message'))

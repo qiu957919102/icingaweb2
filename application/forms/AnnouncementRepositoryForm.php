@@ -7,9 +7,9 @@ use Icinga\Authentication\Auth;
 use Icinga\Data\Filter\Filter;
 
 /**
- * Create, update and delete announces
+ * Create, update and delete announcements
  */
-class AnnounceRepositoryForm extends RepositoryForm
+class AnnouncementRepositoryForm extends RepositoryForm
 {
     /**
      * {@inheritDoc}
@@ -40,7 +40,7 @@ class AnnounceRepositoryForm extends RepositoryForm
             array(
                 'required'      => true,
                 'label'         => $this->translate('Start'),
-                'description'   => $this->translate('The time to display the announce from')
+                'description'   => $this->translate('The time to display the announcement from')
             )
         );
         $this->addElement(
@@ -49,11 +49,11 @@ class AnnounceRepositoryForm extends RepositoryForm
             array(
                 'required'      => true,
                 'label'         => $this->translate('End'),
-                'description'   => $this->translate('The time to display the announce until')
+                'description'   => $this->translate('The time to display the announcement until')
             )
         );
 
-        $this->setTitle($this->translate('Create a new announce'));
+        $this->setTitle($this->translate('Create a new announcement'));
         $this->setSubmitLabel($this->translate('Create'));
     }
 
@@ -63,7 +63,7 @@ class AnnounceRepositoryForm extends RepositoryForm
     protected function createUpdateElements(array $formData)
     {
         $this->createInsertElements($formData);
-        $this->setTitle(sprintf($this->translate('Edit announce %s'), $this->getIdentifier()));
+        $this->setTitle(sprintf($this->translate('Edit announcement %s'), $this->getIdentifier()));
         $this->setSubmitLabel($this->translate('Save'));
     }
 
@@ -72,7 +72,7 @@ class AnnounceRepositoryForm extends RepositoryForm
      */
     protected function createDeleteElements(array $formData)
     {
-        $this->setTitle(sprintf($this->translate('Remove announce %s?'), $this->getIdentifier()));
+        $this->setTitle(sprintf($this->translate('Remove announcement %s?'), $this->getIdentifier()));
         $this->setSubmitLabel($this->translate('Yes'));
     }
 
@@ -90,8 +90,8 @@ class AnnounceRepositoryForm extends RepositoryForm
     protected function getInsertMessage($success)
     {
         return $success
-            ? $this->translate('Announce created successfully')
-            : $this->translate('Failed to create announce');
+            ? $this->translate('Announcement created successfully')
+            : $this->translate('Failed to create announcement');
     }
 
     /**
@@ -101,8 +101,8 @@ class AnnounceRepositoryForm extends RepositoryForm
     {
         return sprintf(
             $success
-                ? $this->translate('Announce %s has been edited')
-                : $this->translate('Failed to edit announce %s'),
+                ? $this->translate('Announcement %s has been edited')
+                : $this->translate('Failed to edit announcement %s'),
             $this->getIdentifier()
         );
     }
@@ -114,8 +114,8 @@ class AnnounceRepositoryForm extends RepositoryForm
     {
         return sprintf(
             $success
-                ? $this->translate('Announce %s has been removed')
-                : $this->translate('Failed to remove announce %s'),
+                ? $this->translate('Announcement %s has been removed')
+                : $this->translate('Failed to remove announcement %s'),
             $this->getIdentifier()
         );
     }

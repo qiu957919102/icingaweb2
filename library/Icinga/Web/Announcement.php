@@ -6,9 +6,9 @@ namespace Icinga\Web;
 use DateTime;
 
 /**
- * An announce to be displayed prominently in the web UI
+ * An announcement to be displayed prominently in the web UI
  */
-class Announce
+class Announcement
 {
     /**
      * @var string
@@ -38,7 +38,7 @@ class Announce
     protected $hash = null;
 
     /**
-     * Announce constructor
+     * Announcement constructor
      *
      * @param array $properties
      */

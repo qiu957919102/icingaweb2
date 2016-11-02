@@ -5,18 +5,18 @@
 <?php endif ?>
 <div class="content">
 <?= $this->qlink(
-    $this->translate('Create a New Announce') ,
-    'announces/add',
+    $this->translate('Create a New Announcement') ,
+    'announcements/add',
     null,
     array(
         'class'             => 'button-link',
         'data-base-target'  => '_next',
         'icon'              => 'plus',
-        'title'             => $this->translate('Create a new announce')
+        'title'             => $this->translate('Create a new announcement')
     )
 ) ?>
-<?php if (! $announces->hasResult()): ?>
-    <p><?= $this->translate('No announces found.') ?></p>
+<?php if (! $announcements->hasResult()): ?>
+    <p><?= $this->translate('No announcements found.') ?></p>
 </div>
 <?php return; endif ?>
     <table data-base-target="_next" class="table-row-selectable common-table">
@@ -30,25 +30,25 @@
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($announces as $announce): /** @var object $announce */ ?>
+    <?php foreach ($announcements as $announcement): /** @var object $announcement */ ?>
         <tr>
-            <td><?= $this->escape($announce->author) ?></td>
+            <td><?= $this->escape($announcement->author) ?></td>
             <td><?= $this->qlink(
-                $this->ellipsis($announce->message, 100),
-                'announces/edit',
-                array('id' => $announce->id),
-                array('title' => $this->translate('Edit this announce'))
+                $this->ellipsis($announcement->message, 100),
+                'announcements/edit',
+                array('id' => $announcement->id),
+                array('title' => $this->translate('Edit this announcement'))
             ) ?></td>
-            <td><?= $this->formatDateTime($announce->start->getTimestamp()) ?></td>
-            <td><?= $this->formatDateTime($announce->end->getTimestamp()) ?></td>
+            <td><?= $this->formatDateTime($announcement->start->getTimestamp()) ?></td>
+            <td><?= $this->formatDateTime($announcement->end->getTimestamp()) ?></td>
             <td class="icon-col"><?= $this->qlink(
                 null,
-                'announces/remove',
-                array('id' => $announce->id),
+                'announcements/remove',
+                array('id' => $announcement->id),
                 array(
                     'class' => 'action-link',
                     'icon'  => 'cancel',
-                    'title' => $this->translate('Remove this announce')
+                    'title' => $this->translate('Remove this announcement')
                 )
             ) ?></td>
         </tr>

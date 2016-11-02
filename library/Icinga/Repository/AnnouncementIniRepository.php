@@ -5,13 +5,12 @@ namespace Icinga\Repository;
 
 use DateTime;
 use Icinga\Application\Config;
-use Icinga\Data\Filter\Filter;
-use Icinga\Web\Announce;
+use Icinga\Web\Announcement;
 
 /**
- * A collection of Announces stored in an INI file
+ * A collection of announcements stored in an INI file
  */
-class AnnounceIniRepository extends IniRepository
+class AnnouncementIniRepository extends IniRepository
 {
     /**
      * {@inheritDoc}
@@ -19,7 +18,7 @@ class AnnounceIniRepository extends IniRepository
     public function __construct($ds = null)
     {
         if ($ds === null) {
-            $ds = Config::app('announces');
+            $ds = Config::app('announcements');
         }
         $config = $ds->getConfigObject();
         if ($config->getKeyColumn() === null) {
@@ -31,12 +30,12 @@ class AnnounceIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    protected $queryColumns = array('announce' => array('id', 'author', 'message', 'hash', 'start', 'end'));
+    protected $queryColumns = array('announcement' => array('id', 'author', 'message', 'hash', 'start', 'end'));
 
     /**
      * {@inheritDoc}
      */
-    protected $conversionRules = array('announce' => array(
+    protected $conversionRules = array('announcement' => array(
         'start' => 'timestamp',
         'end'   => 'timestamp'
     ));
@@ -44,7 +43,7 @@ class AnnounceIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    protected $triggers = array('announce');
+    protected $triggers = array('announcement');
 
     /**
      * Create a DateTime from a *nix timestamp
@@ -77,14 +76,14 @@ class AnnounceIniRepository extends IniRepository
      *
      * @return  object          The eventually modified data to insert
      */
-    protected function onInsertAnnounce($new)
+    protected function onInsertAnnouncement($new)
     {
         if (! isset($new->id)) {
             $new->id = uniqid('', true);
         }
         if (! isset($new->hash)) {
-            $announce = new Announce((array) $new);
-            $new->hash = $announce->getHash();
+            $announcement = new Announcement((array) $new);
+            $new->hash = $announcement->getHash();
         }
 
         return $new;
@@ -98,11 +97,11 @@ class AnnounceIniRepository extends IniRepository
      *
      * @return  object          The eventually modified data to update
      */
-    protected function onUpdateAnnounce($old, $new)
+    protected function onUpdateAnnouncement($old, $new)
     {
         if ($new->message !== $old->message) {
-            $announce = new Announce((array) $new);
-            $new->hash = $announce->getHash();
+            $announcement = new Announcement((array) $new);
+            $new->hash = $announcement->getHash();
         }
 
         return $new;
