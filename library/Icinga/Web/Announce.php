@@ -46,7 +46,9 @@ class Announce
     {
         foreach ($properties as $k => $v) {
             $method = 'set' . ucfirst($k);
-            $this->$method($v);
+            if (method_exists($this, $method)) {
+                $this->$method($v);
+            }
         }
     }
 

@@ -83,7 +83,7 @@ class AnnounceIniRepository extends IniRepository
             $new->id = uniqid('', true);
         }
         if (! isset($new->hash)) {
-            $announce = new Announce($new);
+            $announce = new Announce((array) $new);
             $new->hash = $announce->getHash();
         }
 
@@ -101,10 +101,7 @@ class AnnounceIniRepository extends IniRepository
     protected function onUpdateAnnounce($old, $new)
     {
         if ($new->message !== $old->message) {
-            $options = (array) $new;
-            unset($options['id']);
-            unset($options['hash']);
-            $announce = new Announce($options);
+            $announce = new Announce((array) $new);
             $new->hash = $announce->getHash();
         }
 
