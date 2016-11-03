@@ -104,6 +104,7 @@ class Web extends EmbeddedWeb
             ->setupLogger()
             ->setupInternationalization()
             ->collectAnnouncements()
+            ->cleanUpAnnouncements()
             ->showAnnouncements();
     }
 
@@ -616,6 +617,23 @@ class Web extends EmbeddedWeb
                 'start'     => $announcement->getStart(),
                 'end'       => $announcement->getEnd()
             ));
+        }
+
+        return $this;
+    }
+
+    /**
+     * Delete all expired announcements
+     *
+     * @return $this
+     */
+    protected function cleanUpAnnouncements()
+    {
+        // Clean up announcements as frequent as sessions
+        $gcDivisor = ini_get('session.gc_divisor');
+        if ($gcDivisor >= 1 && mt_rand(1, $gcDivisor) <= ini_get('session.gc_probability')) {
+            $repo = new AnnouncementIniRepository();
+            $repo->delete('announcement', Filter::expression('end', '<', new DateTime()));
         }
 
         return $this;
