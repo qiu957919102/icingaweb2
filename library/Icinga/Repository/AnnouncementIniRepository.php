@@ -15,21 +15,6 @@ class AnnouncementIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    public function __construct($ds = null)
-    {
-        if ($ds === null) {
-            $ds = Config::app('announcements');
-        }
-        $config = $ds->getConfigObject();
-        if ($config->getKeyColumn() === null) {
-            $config->setKeyColumn('id');
-        }
-        parent::__construct($ds);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     protected $queryColumns = array('announcement' => array('id', 'author', 'message', 'hash', 'start', 'end'));
 
     /**
@@ -44,6 +29,14 @@ class AnnouncementIniRepository extends IniRepository
      * {@inheritDoc}
      */
     protected $triggers = array('announcement');
+
+    /**
+     * {@inheritDoc}
+     */
+    protected $configs = array('announcement' => array(
+        'name'      => 'announcements',
+        'keyColumn' => 'id'
+    ));
 
     /**
      * Create a DateTime from a *nix timestamp
