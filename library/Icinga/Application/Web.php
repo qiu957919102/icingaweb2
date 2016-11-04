@@ -575,18 +575,29 @@ class Web extends EmbeddedWeb
     protected function showAnnouncements()
     {
         if (! Icinga::app()->getRequest()->isXmlHttpRequest()) {
-            $repo = new AnnouncementIniRepository();
-            $now = new DateTime();
-            $query = $repo
-                ->select(array('message'))
-                ->applyFilter(new FilterAnd(array(
-                    Filter::expression('start', '<=', $now),
-                    Filter::expression('end', '>=', $now)
-                )))
-                ->order('start');
+            $user = Auth::getInstance()->getUser();
+            if ($user !== null) {
+                $repo = new AnnouncementIniRepository();
+                $now = new DateTime();
+                $query = $repo
+                    ->select(array('message'))
+                    ->applyFilter(new FilterAnd(array(
+                        Filter::expression('start', '<=', $now),
+                        Filter::expression('end', '>=', $now),
+                        Filter::expression(
+                            'hash',
+                            '!=',
+                            $repo->select()
+                                ->from('acknowledgement', array('announcement_hash'))
+                                ->where('user', $user->getUsername())
+                                ->fetchColumn()
+                        )
+                    )))
+                    ->order('start');
 
-            foreach ($query->fetchColumn() as $message) {
-                Notification::info($message);
+                foreach ($query->fetchColumn() as $message) {
+                    Notification::info($message);
+                }
             }
         }
 
