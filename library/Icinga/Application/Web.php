@@ -6,11 +6,9 @@ namespace Icinga\Application;
 require_once __DIR__ . '/EmbeddedWeb.php';
 
 use DateTime;
-use Icinga\Application\Hook\AnnouncementHook;
 use Icinga\Data\Filter\Filter;
 use Icinga\Data\Filter\FilterAnd;
 use Icinga\Repository\AnnouncementIniRepository;
-use Icinga\Web\Announcement;
 use Zend_Controller_Action_HelperBroker;
 use Zend_Controller_Front;
 use Zend_Controller_Router_Route;
@@ -103,7 +101,6 @@ class Web extends EmbeddedWeb
             ->setupTimezone()
             ->setupLogger()
             ->setupInternationalization()
-            ->collectAnnouncements()
             ->cleanUpAnnouncements()
             ->showAnnouncements();
     }
@@ -588,35 +585,6 @@ class Web extends EmbeddedWeb
             foreach ($query->fetchColumn() as $message) {
                 Notification::info($message);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Collect all new announcements provided by hooks and persist them
-     *
-     * @return $this
-     */
-    protected function collectAnnouncements()
-    {
-        $announcements = array();
-        foreach (Hook::all('Announcement') as $hook) {
-            /** @var AnnouncementHook $hook */
-            foreach ($hook->getAnnouncements() as $announcement) {
-                $announcements[] = $announcement;
-            }
-        }
-
-        $repo = new AnnouncementIniRepository();
-        foreach ($announcements as $announcement) {
-            /** @var Announcement $announcement */
-            $repo->insert('announcement', array(
-                'author'    => $announcement->getAuthor(),
-                'message'   => $announcement->getMessage(),
-                'start'     => $announcement->getStart(),
-                'end'       => $announcement->getEnd()
-            ));
         }
 
         return $this;
