@@ -5,7 +5,6 @@ namespace Icinga\Repository;
 
 use DateTime;
 use Icinga\Application\Config;
-use Icinga\Data\Filter\Filter;
 use Icinga\Web\Announcement;
 
 /**
@@ -16,10 +15,7 @@ class AnnouncementIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    protected $queryColumns = array(
-        'announcement'      => array('id', 'author', 'message', 'hash', 'start', 'end'),
-        'acknowledgement'   => array('id', 'user', 'announcement_hash')
-    );
+    protected $queryColumns = array('announcement' => array('id', 'author', 'message', 'hash', 'start', 'end'));
 
     /**
      * {@inheritDoc}
@@ -32,21 +28,15 @@ class AnnouncementIniRepository extends IniRepository
     /**
      * {@inheritDoc}
      */
-    protected $triggers = array('announcement', 'acknowledgement');
+    protected $triggers = array('announcement');
 
     /**
      * {@inheritDoc}
      */
-    protected $configs = array(
-        'announcement' => array(
-            'name'      => 'announcements/announcements',
-            'keyColumn' => 'id'
-        ),
-        'acknowledgement' => array(
-            'name'      => 'announcements/acknowledgements',
-            'keyColumn' => 'id'
-        )
-    );
+    protected $configs = array('announcement' => array(
+        'name'      => 'announcements',
+        'keyColumn' => 'id'
+    ));
 
     /**
      * Create a DateTime from a *nix timestamp
@@ -105,34 +95,6 @@ class AnnouncementIniRepository extends IniRepository
         if ($new->message !== $old->message) {
             $announcement = new Announcement((array) $new);
             $new->hash = $announcement->getHash();
-
-            $this->delete('acknowledgement', Filter::expression('announcement_hash', '=', $old->hash));
-        }
-
-        return $new;
-    }
-
-    /**
-     * Before-delete trigger (per row)
-     *
-     * @param   object  $old    The data as currently stored
-     */
-    protected function onDeleteAnnouncement($old)
-    {
-        $this->delete('acknowledgement', Filter::expression('announcement_hash', '=', $old->hash));
-    }
-
-    /**
-     * Before-insert trigger (per row)
-     *
-     * @param   object  $new    The original data to insert
-     *
-     * @return  object          The eventually modified data to insert
-     */
-    protected function onInsertAcknowledgement($new)
-    {
-        if (! isset($new->id)) {
-            $new->id = uniqid('', true);
         }
 
         return $new;
