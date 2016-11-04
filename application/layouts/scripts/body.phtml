@@ -1,5 +1,6 @@
 <?php
 
+use Icinga\Web\AnnouncementsLoader;
 use Icinga\Web\Url;
 use Icinga\Web\Notification;
 use Icinga\Authentication\Auth;
@@ -18,6 +19,16 @@ if ($this->layout()->autorefreshInterval) {
 
 ?>
 <div id="header">
+<?php
+$announcements = AnnouncementsLoader::getInstance()->getAnnouncements();
+if (! empty($announcements)) {
+    echo '<ul role="alert" id="announcements">';
+    foreach ($announcements as $announcement) {
+        echo '<li>' . $this->escape($announcement->getMessage()) . '</li>';
+    }
+    echo '</ul>';
+}
+?>
   <div id="header-logo-container">
     <?= $this->qlink(
       '',

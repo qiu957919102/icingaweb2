@@ -3,15 +3,10 @@
 
 namespace Icinga\Web\Controller;
 
-use DateTime;
 use Icinga\Application\Config;
 use Icinga\Application\Icinga;
 use Icinga\Application\Modules\Manager;
 use Icinga\Application\Modules\Module;
-use Icinga\Data\Filter\Filter;
-use Icinga\Data\Filter\FilterAnd;
-use Icinga\Repository\AnnouncementIniRepository;
-use Icinga\Web\Notification;
 
 /**
  * Base class for module action controllers
@@ -35,33 +30,6 @@ class ModuleActionController extends ActionController
             && $this->getFrontController()->getDefaultModule() !== $this->getModuleName()) {
             $this->assertPermission(Manager::MODULE_PERMISSION_NS . $this->getModuleName());
         }
-        $this->showAnnouncements();
-    }
-
-    /**
-     * Show the user all announcements as notifications
-     *
-     * @return $this
-     */
-    protected function showAnnouncements()
-    {
-        if (! Icinga::app()->getRequest()->isXmlHttpRequest()) {
-            $repo = new AnnouncementIniRepository();
-            $now = new DateTime();
-            $query = $repo
-                ->select(array('message'))
-                ->applyFilter(new FilterAnd(array(
-                    Filter::expression('start', '<=', $now),
-                    Filter::expression('end', '>=', $now)
-                )))
-                ->order('start');
-
-            foreach ($query->fetchColumn() as $message) {
-                Notification::info($message);
-            }
-        }
-
-        return $this;
     }
 
     /**
