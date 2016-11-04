@@ -7,7 +7,6 @@ require_once __DIR__ . '/EmbeddedWeb.php';
 
 use DateTime;
 use Icinga\Data\Filter\Filter;
-use Icinga\Data\Filter\FilterAnd;
 use Icinga\Repository\AnnouncementIniRepository;
 use Zend_Controller_Action_HelperBroker;
 use Zend_Controller_Front;
@@ -101,8 +100,7 @@ class Web extends EmbeddedWeb
             ->setupTimezone()
             ->setupLogger()
             ->setupInternationalization()
-            ->cleanUpAnnouncements()
-            ->showAnnouncements();
+            ->cleanUpAnnouncements();
     }
 
     /**
@@ -562,32 +560,6 @@ class Web extends EmbeddedWeb
             return Translator::getPreferredLocaleCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         }
         return Translator::DEFAULT_LOCALE;
-    }
-
-    /**
-     * Show the user all announcements as notifications
-     *
-     * @return $this
-     */
-    protected function showAnnouncements()
-    {
-        if (! Icinga::app()->getRequest()->isXmlHttpRequest()) {
-            $repo = new AnnouncementIniRepository();
-            $now = new DateTime();
-            $query = $repo
-                ->select(array('message'))
-                ->applyFilter(new FilterAnd(array(
-                    Filter::expression('start', '<=', $now),
-                    Filter::expression('end', '>=', $now)
-                )))
-                ->order('start');
-
-            foreach ($query->fetchColumn() as $message) {
-                Notification::info($message);
-            }
-        }
-
-        return $this;
     }
 
     /**
