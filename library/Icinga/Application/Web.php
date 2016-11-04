@@ -5,9 +5,6 @@ namespace Icinga\Application;
 
 require_once __DIR__ . '/EmbeddedWeb.php';
 
-use DateTime;
-use Icinga\Data\Filter\Filter;
-use Icinga\Repository\AnnouncementIniRepository;
 use Zend_Controller_Action_HelperBroker;
 use Zend_Controller_Front;
 use Zend_Controller_Router_Route;
@@ -99,8 +96,7 @@ class Web extends EmbeddedWeb
             ->setupUser()
             ->setupTimezone()
             ->setupLogger()
-            ->setupInternationalization()
-            ->cleanUpAnnouncements();
+            ->setupInternationalization();
     }
 
     /**
@@ -560,22 +556,5 @@ class Web extends EmbeddedWeb
             return Translator::getPreferredLocaleCode($_SERVER['HTTP_ACCEPT_LANGUAGE']);
         }
         return Translator::DEFAULT_LOCALE;
-    }
-
-    /**
-     * Delete all expired announcements
-     *
-     * @return $this
-     */
-    protected function cleanUpAnnouncements()
-    {
-        // Clean up announcements as frequent as sessions
-        $gcDivisor = ini_get('session.gc_divisor');
-        if ($gcDivisor >= 1 && mt_rand(1, $gcDivisor) <= ini_get('session.gc_probability')) {
-            $repo = new AnnouncementIniRepository();
-            $repo->delete('announcement', Filter::expression('end', '<', new DateTime()));
-        }
-
-        return $this;
     }
 }
