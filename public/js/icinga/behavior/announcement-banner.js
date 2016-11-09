@@ -10,7 +10,6 @@
      * @param {jQuery} $container   The original event
      */
     function onRendered(e) {
-        console.log('layout rendered', e);
         var _this = e.data.self;
         var $announcements = $('#announcements > li');
 
