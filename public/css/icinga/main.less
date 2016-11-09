@@ -6,7 +6,7 @@
   background: @gray-lightest;
   box-shadow: inset 0 0 12px rgba(0,0,0,.2);
 
-  > li:before {
+  > li:after {
     content: "\e811";
     background: rgba(0,0,0,.1);
     font-size: 1.4285em;
@@ -14,7 +14,8 @@
     color: @text-color-light;
     text-align: center;
     position: absolute;
-    left: .5em;
+    top: 50%; left: .5em;
+    margin-top: -0.8em;
     padding: .3em;
     border-radius: 50%;
     line-height: 1;
@@ -29,6 +30,11 @@
     line-height: 1.4;
   }
 
+  > li .message {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   > li:last-child {
     border-bottom: none;
   }
@@ -36,7 +42,8 @@
   .button-close {
     position: absolute;
     display: block;
-    top: 1em; right: 12px;
+    top: 50%; right: 12px;
+    margin-top: -0.6em;
     background: none;
     border: none;
   }
