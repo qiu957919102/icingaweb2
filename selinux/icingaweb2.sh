@@ -43,7 +43,7 @@ make -f /usr/share/selinux/devel/Makefile icingaweb2.pp || exit
 /usr/sbin/semodule -i icingaweb2.pp
 
 # Generate a man page off the installed module
-sepolicy manpage -p . -d icinga2_t
+#sepolicy manpage -p . -d icingaweb2_t
 # Fixing the file context on /etc/icingaweb2
 /sbin/restorecon -F -R -v /etc/icingaweb2
 # Fixing the file context on /var/log/icingaweb2
