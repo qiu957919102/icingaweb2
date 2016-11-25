@@ -498,7 +498,7 @@ class CatalogEntry
      */
     public function isTranslated()
     {
-        return ! empty($this->msgstr);
+        return ! empty($this->message);
     }
 
     /**
@@ -520,15 +520,15 @@ class CatalogEntry
     {
         $numberOfPlaceHoldersInId = substr_count($this->messageId, '%s');
 
-        foreach ($this->messagePlurals as $key => $value)
-        {
-            if (substr_count($value, '%s') !== $numberOfPlaceHoldersInId)
-            {
-                return false;
+        if (! empty($this->messagePlurals)) {
+            foreach ($this->messagePlurals as $key => $value) {
+                if (substr_count($value, '%s') !== $numberOfPlaceHoldersInId) {
+                    return true;
+                }
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
